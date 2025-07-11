@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>GreenDrop - Control de Riego</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+        h1 { color: #2c3e50; }
+        .card {
+            background: white;
+            padding: 20px;
+            margin-top: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+        }
+        label, input, button {
+            display: block;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌿 GreenDrop</h1>
+    <div class="card">
+        <p><strong>Humedad actual:</strong> <span id="humedad">--</span>%</p>
+        <p><strong>Umbral configurado:</strong> <span id="umbral">--</span>%</p>
+        <p><strong>Estado del riego:</strong> <span id="estado">--</span></p>
+
+        <label for="nuevoUmbral">Cambiar umbral (%):</label>
+        <input type="number" id="nuevoUmbral" min="0" max="100" />
+        <button onclick="actualizarUmbral()">Actualizar Umbral</button>
+
+        <button onclick="activarRiego()">💧 Activar Riego</button>
+        <button onclick="desactivarRiego()">🛑 Desactivar Riego</button>
+    </div>
+
+    <script>
+        async function cargarDatos() {
+            try {
+                const res = await fetch("/api/status");
+                const data = await res.json();
+                document.getElementById("humedad").innerText = data.humedad;
+                document.getElementById("umbral").innerText = data.umbral;
+                document.getElementById("estado").innerText = data.estado;
+            } catch (e) {
+                console.error("Error al cargar datos:", e);
+            }
+        }
+
+        async function actualizarUmbral() {
+            const valor = parseInt(document.getElementById("nuevoUmbral").value);
+            if (isNaN(valor) || valor < 0 || valor > 100) {
+                alert("Ingrese un valor válido entre 0 y 100.");
+                return;
+            }
+            await fetch("/api/umbral", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ umbral: valor })
+            });
+            cargarDatos();
+        }
+
+        async function activarRiego() {
+            await fetch("/api/riego", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ estado: "ON" })
+            });
+            cargarDatos();
+        }
+
+        async function desactivarRiego() {
+            await fetch("/api/riego", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ estado: "OFF" })
+            });
+            cargarDatos();
+        }
+
+        setInterval(cargarDatos, 10000);
+        cargarDatos();
+    </script>
+</body>
+</html>

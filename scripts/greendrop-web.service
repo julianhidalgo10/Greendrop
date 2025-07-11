@@ -1,0 +1,12 @@
+[Unit]
+Description=GreenDrop - Servidor Web Flask
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/usuario/greendrop/src/webserver.py
+WorkingDirectory=/home/usuario/greendrop
+Restart=always
+User=usuario
+
+[Install]
+WantedBy=multi-user.target

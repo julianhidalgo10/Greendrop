@@ -1,0 +1,19 @@
+# Archivos binarios
+greendrop
+
+# Archivos temporales de compilación
+*.o
+*.out
+
+# Archivos de configuración y datos generados
+config/config.txt
+data/log.csv
+data/system_state.txt
+
+# Archivos de Python
+__pycache__/
+*.pyc
+
+# IDEs
+.vscode/
+.idea/

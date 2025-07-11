@@ -1,0 +1,12 @@
+[Unit]
+Description=GreenDrop - Controlador automático de riego
+After=network.target
+
+[Service]
+ExecStart=/home/usuario/greendrop/greendrop
+WorkingDirectory=/home/usuario/greendrop
+Restart=always
+User=usuario
+
+[Install]
+WantedBy=multi-user.target
