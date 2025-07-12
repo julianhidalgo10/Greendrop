@@ -1,125 +1,184 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GreenDrop - Control de Riego</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #0b2e13;
-      color: #ecf0f1;
-      padding: 30px;
-      margin: 0;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>🌿 GreenDrop - Control de Riego</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-    h1 {
-      text-align: center;
-      font-size: 2.5em;
-      color: #2ecc71;
-    }
+  /* Reset y base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0b3d0b, #1f5a1f);
+    color: #e0f2e9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 15px;
+  }
 
+  /* Contenedor principal */
+  .container {
+    background: rgba(15, 53, 15, 0.9);
+    border-radius: 15px;
+    max-width: 480px;
+    width: 100%;
+    padding: 30px 30px 40px;
+    box-shadow: 0 8px 20px rgba(0, 100, 0, 0.7);
+  }
+
+  /* Logo */
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 25px;
+  }
+  .logo svg {
+    width: 48px;
+    height: 48px;
+    fill: #a3d977;
+    filter: drop-shadow(0 0 4px #8cc06f);
+  }
+  .logo h1 {
+    font-weight: 600;
+    font-size: 2.4rem;
+    color: #a3d977;
+    margin: 0;
+    text-shadow: 0 0 5px #729e3c;
+  }
+
+  /* Estado y datos */
+  .status {
+    margin-bottom: 30px;
+  }
+  .status p {
+    font-size: 1.15rem;
+    margin: 12px 0;
+    font-weight: 500;
+  }
+  .status span {
+    font-weight: 700;
+    color: #d3f4bc;
+  }
+
+  /* Formulario */
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #b2d498;
+  }
+  input[type="number"],
+  input[type="time"] {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.1rem;
+    margin-bottom: 18px;
+    background: #3c6e3c;
+    color: #e0f2e9;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    transition: background-color 0.3s ease;
+  }
+  input[type="number"]:focus,
+  input[type="time"]:focus {
+    background-color: #529352;
+    outline: none;
+  }
+
+  /* Botones */
+  button {
+    background-color: #86b974;
+    color: #0b2a0b;
+    border: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 12px 0;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 8px #6a9755;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  button:hover {
+    background-color: #a3d977;
+    box-shadow: 0 6px 12px #8cc06f;
+  }
+
+  /* Separador */
+  hr {
+    border: none;
+    border-top: 1px solid #4c7b4c;
+    margin: 32px 0;
+  }
+
+  /* Mensaje */
+  #mensajeProgramacion {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #b7e4a3;
+    min-height: 1.4em;
+    margin-top: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 520px) {
     .container {
-      display: flex;
-      justify-content: center;
-      margin-top: 30px;
+      padding: 25px 20px 30px;
     }
-
-    .card {
-      background-color: #1c3b2f;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-      max-width: 450px;
-      width: 100%;
-    }
-
-    .card p {
-      font-size: 1.2em;
-      margin: 10px 0;
-    }
-
-    .status {
-      color: #2ecc71;
-      font-weight: bold;
-    }
-
-    label {
-      display: block;
-      margin-top: 20px;
-      margin-bottom: 5px;
-    }
-
-    input[type="number"] {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      background-color: #2f4f3a;
-      color: #fff;
-      font-size: 1em;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 12px;
-      font-size: 1em;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      width: 100%;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    .btn-umbral {
-      background-color: #27ae60;
-      color: #fff;
-    }
-
-    .btn-activar {
-      background-color: #1abc9c;
-      color: #fff;
-    }
-
-    .btn-desactivar {
-      background-color: #e74c3c;
-      color: #fff;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      color: #7f8c8d;
-      font-size: 0.9em;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <h1>🌿 GreenDrop</h1>
-
   <div class="container">
-    <div class="card">
-      <p><strong>🌡️ Humedad actual:</strong> <span id="humedad" class="status">--</span>%</p>
-      <p><strong>📉 Umbral configurado:</strong> <span id="umbral" class="status">--</span>%</p>
-      <p><strong>💧 Estado del riego:</strong> <span id="estado" class="status">--</span></p>
-
-      <label for="nuevoUmbral">🔧 Cambiar umbral (%):</label>
-      <input type="number" id="nuevoUmbral" min="0" max="100" />
-
-      <button class="btn-umbral" onclick="actualizarUmbral()">Actualizar Umbral</button>
-      <button class="btn-activar" onclick="activarRiego()">💧 Activar Riego</button>
-      <button class="btn-desactivar" onclick="desactivarRiego()">🛑 Desactivar Riego</button>
+    <div class="logo" aria-label="Logo GreenDrop">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <path d="M32 2C18 14 14 27 14 38a18 18 0 0 0 36 0c0-11-4-24-18-36z"/>
+      </svg>
+      <h1>GreenDrop</h1>
     </div>
-  </div>
 
-  <footer>
-    GreenDrop © 2025 — Sistema de Riego Inteligente
-  </footer>
+    <section class="status" aria-live="polite" aria-atomic="true">
+      <p><strong>Humedad actual:</strong> <span id="humedad">--</span>%</p>
+      <p><strong>Umbral configurado:</strong> <span id="umbral">--</span>%</p>
+      <p><strong>Estado del riego:</strong> <span id="estado">--</span></p>
+    </section>
+
+    <section aria-label="Control de umbral y riego manual">
+      <label for="nuevoUmbral">Cambiar umbral (%)</label>
+      <input type="number" id="nuevoUmbral" min="0" max="100" aria-describedby="umbralHelp" />
+      <button type="button" onclick="actualizarUmbral()">Actualizar Umbral</button>
+
+      <button type="button" onclick="activarRiego()">💧 Activar Riego</button>
+      <button type="button" onclick="desactivarRiego()">🛑 Desactivar Riego</button>
+    </section>
+
+    <hr />
+
+    <section aria-label="Programación automática de riego">
+      <h2 style="color:#9fcb8a; margin-bottom: 15px;">Riego Automático Programado</h2>
+
+      <label for="horaProgramada">Hora (HH:MM)</label>
+      <input type="time" id="horaProgramada" aria-describedby="horaHelp" />
+
+      <label for="duracionRiego">Duración (segundos)</label>
+      <input type="number" id="duracionRiego" min="1" max="3600" aria-describedby="duracionHelp" />
+
+      <button type="button" onclick="guardarProgramacion()">Guardar Programación</button>
+      <p id="mensajeProgramacion" role="alert" aria-live="assertive"></p>
+    </section>
+  </div>
 
   <script>
     async function cargarDatos() {
@@ -142,7 +201,7 @@
       }
       await fetch("/api/umbral", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ umbral: valor })
       });
       cargarDatos();
@@ -151,7 +210,7 @@
     async function activarRiego() {
       await fetch("/api/riego", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ estado: "ON" })
       });
       cargarDatos();
@@ -160,14 +219,51 @@
     async function desactivarRiego() {
       await fetch("/api/riego", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ estado: "OFF" })
       });
       cargarDatos();
     }
 
+    async function cargarProgramacion() {
+      try {
+        const res = await fetch("/api/programado");
+        const data = await res.json();
+        document.getElementById("horaProgramada").value = data.hora;
+        document.getElementById("duracionRiego").value = data.duracion;
+      } catch (e) {
+        console.error("Error cargando programación:", e);
+      }
+    }
+
+    async function guardarProgramacion() {
+      const hora = document.getElementById("horaProgramada").value;
+      const duracion = parseInt(document.getElementById("duracionRiego").value);
+
+      if (!hora || !duracion || duracion <= 0) {
+        alert("Por favor, ingresa una hora válida y duración positiva.");
+        return;
+      }
+
+      const res = await fetch("/api/programado", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hora: hora, duracion: duracion })
+      });
+
+      if (res.ok) {
+        const mensaje = document.getElementById("mensajeProgramacion");
+        mensaje.innerText = "Programación actualizada correctamente.";
+        setTimeout(() => { mensaje.innerText = ""; }, 4000);
+      } else {
+        const error = await res.json();
+        alert("Error: " + (error.error || "No se pudo actualizar"));
+      }
+    }
+
     setInterval(cargarDatos, 10000);
     cargarDatos();
+    cargarProgramacion();
   </script>
 </body>
 </html>
