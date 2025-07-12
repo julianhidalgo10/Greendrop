@@ -7,7 +7,6 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-  /* Reset y base */
   * {
     box-sizing: border-box;
   }
@@ -22,8 +21,6 @@
     align-items: center;
     padding: 30px 15px;
   }
-
-  /* Contenedor principal */
   .container {
     background: rgba(15, 53, 15, 0.9);
     border-radius: 15px;
@@ -32,8 +29,6 @@
     padding: 30px 30px 40px;
     box-shadow: 0 8px 20px rgba(0, 100, 0, 0.7);
   }
-
-  /* Logo */
   .logo {
     display: flex;
     align-items: center;
@@ -54,8 +49,6 @@
     margin: 0;
     text-shadow: 0 0 5px #729e3c;
   }
-
-  /* Estado y datos */
   .status {
     margin-bottom: 30px;
   }
@@ -68,8 +61,6 @@
     font-weight: 700;
     color: #d3f4bc;
   }
-
-  /* Formulario */
   label {
     display: block;
     font-weight: 600;
@@ -94,8 +85,6 @@
     background-color: #529352;
     outline: none;
   }
-
-  /* Botones */
   button {
     background-color: #86b974;
     color: #0b2a0b;
@@ -114,15 +103,11 @@
     background-color: #a3d977;
     box-shadow: 0 6px 12px #8cc06f;
   }
-
-  /* Separador */
   hr {
     border: none;
     border-top: 1px solid #4c7b4c;
     margin: 32px 0;
   }
-
-  /* Mensaje */
   #mensajeProgramacion {
     text-align: center;
     font-weight: 700;
@@ -131,8 +116,6 @@
     min-height: 1.4em;
     margin-top: 8px;
   }
-
-  /* Responsive */
   @media (max-width: 520px) {
     .container {
       padding: 25px 20px 30px;
@@ -157,7 +140,15 @@
 
     <section aria-label="Control de umbral y riego manual">
       <label for="nuevoUmbral">Cambiar umbral (%)</label>
-      <input type="number" id="nuevoUmbral" min="0" max="100" aria-describedby="umbralHelp" />
+      <input
+        type="number"
+        id="nuevoUmbral"
+        min="0"
+        max="100"
+        aria-describedby="umbralHelp"
+        onchange="actualizarUmbral()"
+      />
+      <!-- Botón puede quedarse para acción manual, o eliminar si quieres sólo automático -->
       <button type="button" onclick="actualizarUmbral()">Actualizar Umbral</button>
 
       <button type="button" onclick="activarRiego()">💧 Activar Riego</button>
@@ -170,11 +161,24 @@
       <h2 style="color:#9fcb8a; margin-bottom: 15px;">Riego Automático Programado</h2>
 
       <label for="horaProgramada">Hora (HH:MM)</label>
-      <input type="time" id="horaProgramada" aria-describedby="horaHelp" />
+      <input
+        type="time"
+        id="horaProgramada"
+        aria-describedby="horaHelp"
+        onchange="guardarProgramacion()"
+      />
 
       <label for="duracionRiego">Duración (segundos)</label>
-      <input type="number" id="duracionRiego" min="1" max="3600" aria-describedby="duracionHelp" />
+      <input
+        type="number"
+        id="duracionRiego"
+        min="1"
+        max="3600"
+        aria-describedby="duracionHelp"
+        onchange="guardarProgramacion()"
+      />
 
+      <!-- Botón puede quedarse para acción manual, o eliminar si quieres sólo automático -->
       <button type="button" onclick="guardarProgramacion()">Guardar Programación</button>
       <p id="mensajeProgramacion" role="alert" aria-live="assertive"></p>
     </section>
@@ -199,12 +203,17 @@
         alert("Ingrese un valor válido entre 0 y 100.");
         return;
       }
-      await fetch("/api/umbral", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ umbral: valor })
-      });
-      cargarDatos();
+      try {
+        await fetch("/api/umbral", {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ umbral: valor })
+        });
+        // Actualiza la UI inmediatamente
+        document.getElementById("umbral").innerText = valor;
+      } catch (e) {
+        console.error("Error actualizando umbral:", e);
+      }
     }
 
     async function activarRiego() {
@@ -241,23 +250,25 @@
       const duracion = parseInt(document.getElementById("duracionRiego").value);
 
       if (!hora || !duracion || duracion <= 0) {
-        alert("Por favor, ingresa una hora válida y duración positiva.");
         return;
       }
 
-      const res = await fetch("/api/programado", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ hora: hora, duracion: duracion })
-      });
+      try {
+        const res = await fetch("/api/programado", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ hora: hora, duracion: duracion })
+        });
 
-      if (res.ok) {
-        const mensaje = document.getElementById("mensajeProgramacion");
-        mensaje.innerText = "Programación actualizada correctamente.";
-        setTimeout(() => { mensaje.innerText = ""; }, 4000);
-      } else {
-        const error = await res.json();
-        alert("Error: " + (error.error || "No se pudo actualizar"));
+        if (res.ok) {
+          document.getElementById("mensajeProgramacion").innerText = "Programación actualizada correctamente.";
+          setTimeout(() => { document.getElementById("mensajeProgramacion").innerText = ""; }, 4000);
+        } else {
+          const error = await res.json();
+          alert("Error: " + (error.error || "No se pudo actualizar"));
+        }
+      } catch (e) {
+        console.error("Error actualizando programación:", e);
       }
     }
 
