@@ -21,28 +21,26 @@ if not os.path.exists(STATE_PATH):
 def index():
     return send_from_directory("static", "index.html")
 
-@app.route("/api/status", methods=["GET"])
+@app.route('/api/status', methods=['GET'])
 def get_status():
-    humedad = "-"
-    with open(LOG_PATH, "r") as f:
-        lines = f.readlines()
-        if lines:
-            last_line = lines[-1].strip().split(",")
-            if len(last_line) >= 2:
-                humedad = int(last_line[1])
-
-    with open(CONFIG_PATH, "r") as f:
-        line = f.readline().strip()
-        umbral = int(line.split("=")[1]) if "=" in line else 40
-
-    with open(STATE_PATH, "r") as f:
-        estado = f.read().strip()
-
+    threshold = read_threshold()
+    estado = read_system_state()
+    humedad = None
+    try:
+        with open(LOG_PATH, "r") as f:
+            lines = f.readlines()
+            for line in reversed(lines):
+                parts = line.strip().split(',')
+                if len(parts) >= 2 and parts[1].isdigit():
+                    humedad = int(parts[1])
+                    break
+    except FileNotFoundError:
+        pass
     return jsonify({
-        "humedad": humedad,
-        "umbral": umbral,
-        "estado": estado
-    })
+        "estado": estado,
+        "umbral": threshold,
+        "humedad": humedad
+    })
 
 @app.route("/api/umbral", methods=["POST"])
 def set_umbral():
