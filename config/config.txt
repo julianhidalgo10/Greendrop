@@ -1,1 +1,3 @@
-threshold=40
+threshold=60
+hora=04:02
+duracion=10

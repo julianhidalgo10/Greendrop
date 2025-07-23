@@ -134,21 +134,20 @@
 
     <section class="status" aria-live="polite" aria-atomic="true">
       <p><strong>Humedad actual:</strong> <span id="humedad">--</span>%</p>
-      <p><strong>Umbral configurado:</strong> <span id="umbral">--</span>%</p>
+      <p><strong>Umbral configurado:</strong> <span id="umbral">--</span></p>
       <p><strong>Estado del riego:</strong> <span id="estado">--</span></p>
     </section>
 
     <section aria-label="Control de umbral y riego manual">
-      <label for="nuevoUmbral">Cambiar umbral (%)</label>
+      <label for="nuevoUmbral">Cambiar umbral</label>
       <input
         type="number"
         id="nuevoUmbral"
         min="0"
         max="100"
-        aria-describedby="umbralHelp"
-        onchange="actualizarConfiguracion()"
+        onchange="actualizarUmbral()"
       />
-      <button type="button" onclick="actualizarConfiguracion()">Actualizar Umbral</button>
+      <button type="button" onclick="actualizarUmbral()">Actualizar Umbral</button>
 
       <button type="button" onclick="activarRiego()">💧 Activar Riego</button>
       <button type="button" onclick="desactivarRiego()">🛑 Desactivar Riego</button>
@@ -163,7 +162,6 @@
       <input
         type="time"
         id="horaProgramada"
-        aria-describedby="horaHelp"
         onchange="guardarProgramacion()"
       />
 
@@ -173,7 +171,6 @@
         id="duracionRiego"
         min="1"
         max="3600"
-        aria-describedby="duracionHelp"
         onchange="guardarProgramacion()"
       />
 
@@ -187,43 +184,48 @@
       try {
         const res = await fetch("/api/status");
         const data = await res.json();
-        document.getElementById("humedad").innerText = data.humedad;
-        document.getElementById("umbral").innerText = data.umbral;
-        document.getElementById("estado").innerText = data.estado;
+        document.getElementById("humedad").innerText = data.humedad || "--";
+        document.getElementById("umbral").innerText = data.umbral || "--";
+        document.getElementById("estado").innerText = data.estado_riego || "OFF";
       } catch (e) {
         console.error("Error al cargar datos:", e);
       }
     }
 
-    async function actualizarConfiguracion() {
+    async function actualizarUmbral() {
       const valor = parseInt(document.getElementById("nuevoUmbral").value);
-      const hora = document.getElementById("horaProgramada").value;
-      const duracion = parseInt(document.getElementById("duracionRiego").value);
-
       if (isNaN(valor) || valor < 0 || valor > 100) {
         alert("Ingrese un valor válido entre 0 y 100.");
         return;
       }
-      if (!hora || !duracion || duracion <= 0) {
-        alert("Ingrese valores válidos para la hora y duración.");
-        return;
-      }
-
       try {
         await fetch("/api/configuracion", {
           method: "POST",
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            umbral: valor,
-            hora: hora,
-            duracion: duracion
-          })
+          body: JSON.stringify({ umbral: valor })
         });
-        // Actualiza la UI inmediatamente
-        cargarDatos();
+        document.getElementById("umbral").innerText = valor;
       } catch (e) {
-        console.error("Error actualizando configuración:", e);
+        console.error("Error actualizando umbral:", e);
       }
+    }
+
+    async function activarRiego() {
+      await fetch("/api/riego", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado: "ON" })
+      });
+      cargarDatos();
+    }
+
+    async function desactivarRiego() {
+      await fetch("/api/riego", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado: "OFF" })
+      });
+      cargarDatos();
     }
 
     async function guardarProgramacion() {
@@ -235,7 +237,7 @@
       }
 
       try {
-        const res = await fetch("/api/programado", {
+        const res = await fetch("/api/configuracion", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ hora: hora, duracion: duracion })
