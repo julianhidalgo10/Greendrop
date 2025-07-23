@@ -1,127 +1,127 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>🌿 GreenDrop - Control de Riego</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🌿 GreenDrop - Control de Riego</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0; padding: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #0b3d0b, #1f5a1f);
-    color: #e0f2e9;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px 15px;
-  }
-  .container {
-    background: rgba(15, 53, 15, 0.9);
-    border-radius: 15px;
-    max-width: 480px;
-    width: 100%;
-    padding: 30px 30px 40px;
-    box-shadow: 0 8px 20px rgba(0, 100, 0, 0.7);
-  }
-  .logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 25px;
-  }
-  .logo svg {
-    width: 48px;
-    height: 48px;
-    fill: #a3d977;
-    filter: drop-shadow(0 0 4px #8cc06f);
-  }
-  .logo h1 {
-    font-weight: 600;
-    font-size: 2.4rem;
-    color: #a3d977;
-    margin: 0;
-    text-shadow: 0 0 5px #729e3c;
-  }
-  .status {
-    margin-bottom: 30px;
-  }
-  .status p {
-    font-size: 1.15rem;
-    margin: 12px 0;
-    font-weight: 500;
-  }
-  .status span {
-    font-weight: 700;
-    color: #d3f4bc;
-  }
-  label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #b2d498;
-  }
-  input[type="number"],
-  input[type="time"] {
-    width: 100%;
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: none;
-    font-size: 1.1rem;
-    margin-bottom: 18px;
-    background: #3c6e3c;
-    color: #e0f2e9;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
-    transition: background-color 0.3s ease;
-  }
-  input[type="number"]:focus,
-  input[type="time"]:focus {
-    background-color: #529352;
-    outline: none;
-  }
-  button {
-    background-color: #86b974;
-    color: #0b2a0b;
-    border: none;
-    font-weight: 700;
-    font-size: 1.1rem;
-    padding: 12px 0;
-    border-radius: 10px;
-    cursor: pointer;
-    width: 100%;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 8px #6a9755;
-    transition: background-color 0.25s ease, box-shadow 0.25s ease;
-  }
-  button:hover {
-    background-color: #a3d977;
-    box-shadow: 0 6px 12px #8cc06f;
-  }
-  hr {
-    border: none;
-    border-top: 1px solid #4c7b4c;
-    margin: 32px 0;
-  }
-  #mensajeProgramacion {
-    text-align: center;
-    font-weight: 700;
-    font-size: 1rem;
-    color: #b7e4a3;
-    min-height: 1.4em;
-    margin-top: 8px;
-  }
-  @media (max-width: 520px) {
-    .container {
-      padding: 25px 20px 30px;
+    * {
+      box-sizing: border-box;
     }
-  }
-</style>
+    body {
+      margin: 0; padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0b3d0b, #1f5a1f);
+      color: #e0f2e9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 15px;
+    }
+    .container {
+      background: rgba(15, 53, 15, 0.9);
+      border-radius: 15px;
+      max-width: 480px;
+      width: 100%;
+      padding: 30px 30px 40px;
+      box-shadow: 0 8px 20px rgba(0, 100, 0, 0.7);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+    .logo svg {
+      width: 48px;
+      height: 48px;
+      fill: #a3d977;
+      filter: drop-shadow(0 0 4px #8cc06f);
+    }
+    .logo h1 {
+      font-weight: 600;
+      font-size: 2.4rem;
+      color: #a3d977;
+      margin: 0;
+      text-shadow: 0 0 5px #729e3c;
+    }
+    .status {
+      margin-bottom: 30px;
+    }
+    .status p {
+      font-size: 1.15rem;
+      margin: 12px 0;
+      font-weight: 500;
+    }
+    .status span {
+      font-weight: 700;
+      color: #d3f4bc;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #b2d498;
+    }
+    input[type="number"],
+    input[type="time"] {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1.1rem;
+      margin-bottom: 18px;
+      background: #3c6e3c;
+      color: #e0f2e9;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
+    }
+    input[type="number"]:focus,
+    input[type="time"]:focus {
+      background-color: #529352;
+      outline: none;
+    }
+    button {
+      background-color: #86b974;
+      color: #0b2a0b;
+      border: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 12px 0;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 8px #6a9755;
+      transition: background-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    button:hover {
+      background-color: #a3d977;
+      box-shadow: 0 6px 12px #8cc06f;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #4c7b4c;
+      margin: 32px 0;
+    }
+    #mensajeProgramacion {
+      text-align: center;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #b7e4a3;
+      min-height: 1.4em;
+      margin-top: 8px;
+    }
+    @media (max-width: 520px) {
+      .container {
+        padding: 25px 20px 30px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -146,10 +146,9 @@
         min="0"
         max="100"
         aria-describedby="umbralHelp"
-        onchange="actualizarUmbral()"
+        onchange="actualizarConfiguracion()"
       />
-      <!-- Botón puede quedarse para acción manual, o eliminar si quieres sólo automático -->
-      <button type="button" onclick="actualizarUmbral()">Actualizar Umbral</button>
+      <button type="button" onclick="actualizarConfiguracion()">Actualizar Umbral</button>
 
       <button type="button" onclick="activarRiego()">💧 Activar Riego</button>
       <button type="button" onclick="desactivarRiego()">🛑 Desactivar Riego</button>
@@ -178,7 +177,6 @@
         onchange="guardarProgramacion()"
       />
 
-      <!-- Botón puede quedarse para acción manual, o eliminar si quieres sólo automático -->
       <button type="button" onclick="guardarProgramacion()">Guardar Programación</button>
       <p id="mensajeProgramacion" role="alert" aria-live="assertive"></p>
     </section>
@@ -197,51 +195,34 @@
       }
     }
 
-    async function actualizarUmbral() {
+    async function actualizarConfiguracion() {
       const valor = parseInt(document.getElementById("nuevoUmbral").value);
+      const hora = document.getElementById("horaProgramada").value;
+      const duracion = parseInt(document.getElementById("duracionRiego").value);
+
       if (isNaN(valor) || valor < 0 || valor > 100) {
         alert("Ingrese un valor válido entre 0 y 100.");
         return;
       }
+      if (!hora || !duracion || duracion <= 0) {
+        alert("Ingrese valores válidos para la hora y duración.");
+        return;
+      }
+
       try {
-        await fetch("/api/umbral", {
+        await fetch("/api/configuracion", {
           method: "POST",
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ umbral: valor })
+          body: JSON.stringify({
+            umbral: valor,
+            hora: hora,
+            duracion: duracion
+          })
         });
         // Actualiza la UI inmediatamente
-        document.getElementById("umbral").innerText = valor;
+        cargarDatos();
       } catch (e) {
-        console.error("Error actualizando umbral:", e);
-      }
-    }
-
-    async function activarRiego() {
-      await fetch("/api/riego", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ estado: "ON" })
-      });
-      cargarDatos();
-    }
-
-    async function desactivarRiego() {
-      await fetch("/api/riego", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ estado: "OFF" })
-      });
-      cargarDatos();
-    }
-
-    async function cargarProgramacion() {
-      try {
-        const res = await fetch("/api/programado");
-        const data = await res.json();
-        document.getElementById("horaProgramada").value = data.hora;
-        document.getElementById("duracionRiego").value = data.duracion;
-      } catch (e) {
-        console.error("Error cargando programación:", e);
+        console.error("Error actualizando configuración:", e);
       }
     }
 
@@ -274,7 +255,6 @@
 
     setInterval(cargarDatos, 10000);
     cargarDatos();
-    cargarProgramacion();
   </script>
 </body>
 </html>

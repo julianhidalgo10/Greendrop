@@ -9,13 +9,47 @@ CONFIG_PATH = "config/config.txt"
 LOG_PATH = "data/log.csv"
 STATE_PATH = "data/system_state.txt"
 
+# Crear archivo de configuración si no existe
 if not os.path.exists(CONFIG_PATH):
     with open(CONFIG_PATH, "w") as f:
-        f.write("threshold=40")
+        f.write("threshold=40\nhora=06:00\nduracion=10\n")
 
+# Crear archivo de estado si no existe
 if not os.path.exists(STATE_PATH):
     with open(STATE_PATH, "w") as f:
         f.write("OFF")
+
+# Función para leer el umbral desde el archivo de configuración
+def read_threshold():
+    with open(CONFIG_PATH, "r") as f:
+        for line in f:
+            if line.startswith("threshold"):
+                return int(line.strip().split("=")[1])
+    return 40  # Valor por defecto si no se encuentra
+
+# Función para leer la hora desde el archivo de configuración
+def read_hora():
+    with open(CONFIG_PATH, "r") as f:
+        for line in f:
+            if line.startswith("hora"):
+                return line.strip().split("=")[1]
+    return "06:00"  # Hora por defecto si no se encuentra
+
+# Función para leer la duración desde el archivo de configuración
+def read_duracion():
+    with open(CONFIG_PATH, "r") as f:
+        for line in f:
+            if line.startswith("duracion"):
+                return int(line.strip().split("=")[1])
+    return 10  # Duración por defecto si no se encuentra
+
+# Función para leer el estado del sistema
+def read_system_state():
+    try:
+        with open(STATE_PATH, "r") as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return "OFF"
 
 @app.route("/")
 def index():
@@ -39,8 +73,23 @@ def get_status():
     return jsonify({
         "estado": estado,
         "umbral": threshold,
-        "humedad": humedad
-    })
+        "humedad": humedad
+    })
+
+@app.route("/api/configuracion", methods=["POST"])
+def set_configuracion():
+    data = request.get_json()
+    umbral = data.get("umbral", 40)
+    hora = data.get("hora", "06:00")
+    duracion = data.get("duracion", 10)
+
+    # Actualizar el archivo de configuración
+    with open(CONFIG_PATH, "w") as f:
+        f.write(f"threshold={umbral}\n")
+        f.write(f"hora={hora}\n")
+        f.write(f"duracion={duracion}\n")
+
+    return jsonify({"mensaje": "Configuración actualizada", "umbral": umbral, "hora": hora, "duracion": duracion})
 
 @app.route("/api/umbral", methods=["POST"])
 def set_umbral():
@@ -59,7 +108,6 @@ def set_riego():
     with open(STATE_PATH, "w") as f:
         f.write(nuevo_estado)
     return jsonify({"message": f"Riego cambiado a {nuevo_estado}"})
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

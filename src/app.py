@@ -6,60 +6,71 @@ import os
 
 app = Flask(__name__, static_folder="static")
 
-# Estado global simulado
-humedad_actual = 45  # Simulación: valor inicial
+# Estado global
+humedad_actual = 45  # Valor inicial
 umbral_humedad = 40  # Valor por defecto
 estado_riego = "OFF" # ON/OFF
 
-# Configuración inicial del riego programado (modificable desde API)
-programacion_riego = {
-    "hora": "06:00",      # Hora en formato HH:MM
-    "duracion": 10        # Duración en segundos
-}
+# Función para leer la configuración desde config.txt
+def read_config():
+    config = {}
+    if os.path.exists("config/config.txt"):
+        with open("config/config.txt", "r") as f:
+            for line in f:
+                key, value = line.strip().split("=")
+                config[key] = value
+    return config
 
-# Cambiar estado del riego
-def cambiar_estado_riego(nuevo_estado):
-    global estado_riego
-    estado_riego = nuevo_estado
-    # Guardar estado en archivo
-    with open("data/system_state.txt", "w") as f:
-        f.write(estado_riego)
-    print(f"[ESTADO RIEGO] Cambiado a: {estado_riego}")
+# Función para actualizar la configuración en config.txt
+def update_config(threshold=None, hora=None, duracion=None):
+    config = read_config()
+    if threshold:
+        config["threshold"] = str(threshold)
+    if hora:
+        config["hora"] = str(hora)
+    if duracion:
+        config["duracion"] = str(duracion)
 
-# Ruta para servir la página principal
-@app.route("/")
-def index():
-    return send_from_directory(app.static_folder, "index.html")
+    # Guardar en config.txt
+    with open("config/config.txt", "w") as f:
+        for key, value in config.items():
+            f.write(f"{key}={value}\n")
 
-# API: Obtener estado actual
-@app.route("/api/status")
+# API: Obtener estado actual y configuración
+@app.route("/api/status", methods=["GET"])
 def api_status():
+    config = read_config()
+    threshold = config.get("threshold", 40)
+    estado = read_system_state()
+    humedad = None
+    try:
+        with open(LOG_PATH, "r") as f:
+            lines = f.readlines()
+            for line in reversed(lines):
+                parts = line.strip().split(',')
+                if len(parts) >= 2 and parts[1].isdigit():
+                    humedad = int(parts[1])
+                    break
+    except FileNotFoundError:
+        pass
     return jsonify({
-        "humedad": humedad_actual,
-        "umbral": umbral_humedad,
-        "estado": estado_riego
+        "estado": estado,
+        "umbral": threshold,
+        "humedad": humedad
     })
 
-# API: Actualizar umbral
-@app.route("/api/umbral", methods=["POST"])
-def api_umbral():
-    global umbral_humedad
+# API: Actualizar umbral, hora y duración
+@app.route("/api/configuracion", methods=["POST"])
+def set_configuracion():
     data = request.get_json()
-    umbral = data.get("umbral")
-    if umbral is None or not (0 <= umbral <= 100):
-        return jsonify({"error": "Umbral inválido"}), 400
-    umbral_humedad = umbral
-    return jsonify({"mensaje": "Umbral actualizado", "umbral": umbral_humedad})
+    umbral = data.get("umbral", 40)
+    hora = data.get("hora", "06:00")
+    duracion = data.get("duracion", 10)
 
-# API: Control manual del riego
-@app.route("/api/riego", methods=["POST"])
-def api_riego():
-    data = request.get_json()
-    estado = data.get("estado")
-    if estado not in ("ON", "OFF"):
-        return jsonify({"error": "Estado inválido"}), 400
-    cambiar_estado_riego(estado)
-    return jsonify({"mensaje": f"Riego {estado} exitoso"})
+    # Actualizar la configuración en config.txt
+    update_config(threshold=umbral, hora=hora, duracion=duracion)
+
+    return jsonify({"mensaje": "Configuración actualizada", "umbral": umbral, "hora": hora, "duracion": duracion})
 
 # Función del riego automático programado
 def riego_programado():
@@ -69,18 +80,14 @@ def riego_programado():
     cambiar_estado_riego("OFF")
     print("[RIEGO PROGRAMADO] Riego automático finalizado.")
 
-# Scheduler para riego programado con lectura dinámica de hora y duración
-def start_scheduler():
-    while True:
-        schedule.clear()
-        schedule.every().day.at(programacion_riego["hora"]).do(riego_programado)
-        schedule.run_pending()
-        time.sleep(1)
-
 # Endpoints para consultar y modificar programación del riego automático
 @app.route('/api/programado', methods=['GET'])
 def obtener_programacion():
-    return jsonify(programacion_riego)
+    config = read_config()
+    return jsonify({
+        "hora": config.get("hora", "06:00"),
+        "duracion": config.get("duracion", 10)
+    })
 
 @app.route('/api/programado', methods=['POST'])
 def modificar_programacion():
@@ -95,22 +102,9 @@ def modificar_programacion():
         return jsonify({"error": "Duración inválida, debe ser entero positivo"}), 400
 
     # Actualizar configuración global
-    programacion_riego["hora"] = hora
-    programacion_riego["duracion"] = duracion
+    update_config(threshold=None, hora=hora, duracion=duracion)
 
-    return jsonify({"mensaje": "Programación actualizada", "programacion": programacion_riego})
-
-# Se inicia el scheduler en un hilo aparte para no bloquear Flask
-scheduler_thread = threading.Thread(target=start_scheduler, daemon=True)
-scheduler_thread.start()
+    return jsonify({"mensaje": "Programación actualizada", "programacion": {"hora": hora, "duracion": duracion}})
 
 if __name__ == "__main__":
-    # Crear carpeta data si no existe
-    if not os.path.exists("data"):
-        os.makedirs("data")
-    # Crear archivo de estado si no existe
-    if not os.path.exists("data/system_state.txt"):
-        with open("data/system_state.txt", "w") as f:
-            f.write("OFF")
-
     app.run(host="0.0.0.0", port=5000)
