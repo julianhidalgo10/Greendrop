@@ -1,0 +1,15 @@
+Identificador,Indicadores,Prueba(s) – Descripción,Criterios de éxito,Corridas,Quién,Cuándo,Revisa
+F1-ENV-001,Entorno virtual creado,python3 -m venv venv,Se crea carpeta venv y prompt cambia,1,Julián Hidalgo,2025-07-16,Sí
+F1-ENV-002,Dependencias instaladas,pip install -r requirements.txt,pip termina sin errores,1,David Pérez,2025-07-16,Sí
+F1-ENV-003,Pinout verificado,dmesg | grep tty ; gpio readall,GPIO visibles sin conflicto,1,Julián Hidalgo,2025-07-16,Sí
+F2-SEN-001,Lectura DHT11 correcta,python test_dht11.py,Temp y Humedad >0 en consola,3,David Pérez,2025-07-17,Sí
+F2-SEN-002,Registro de humedad,print y log CSV,Archivo CSV con datos,2,Julián Hidalgo,2025-07-17,Sí
+F3-CTL-001,Relay ON cuando H<UMBRAL_ON,humedad=35%,Relay hace click y LED ON,3,Julián Hidalgo,2025-07-18,Sí
+F3-CTL-002,Relay OFF cuando H>UMBRAL_OFF,humedad=60%,Relay OFF y LED OFF,3,David Pérez,2025-07-18,Sí
+F3-SCH-001,Restricción de horario,Hora=12pm fuera horario,Relay permanece OFF,2,Julián Hidalgo,2025-07-18,Sí
+F4-API-001,API /api/status responde,curl GET /api/status,Código 200 y JSON válido,2,David Pérez,2025-07-22,Sí
+F4-API-002,API /api/riego ON/OFF,curl POST estado=ON,Relay cambia estado y 200 OK,3,Julián Hidalgo,2025-07-22,Sí
+F4-API-003,API /api/configuracion actualiza,curl POST umbral=45,Archivo config.txt actualizado,2,David Pérez,2025-07-22,Sí
+F5-AUTO-001,Servicio systemd habilitado,systemctl enable greendrop,Estado=active (running),1,Julián Hidalgo,2025-07-23,Sí
+F5-DOC-001,README completo,Revisión peer-review,Sección diagramas y licencias ok,1,David Pérez,2025-07-23,Sí
+F5-LIC-001,LICENSE MIT añadido,Archivo LICENSE,Contenido MIT correcto,1,Julián Hidalgo,2025-07-23,Sí

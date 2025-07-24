@@ -245,6 +245,33 @@ GreenDrop es una solución embebida funcional, extensible y educativa. Permite i
 
 ---
 
+## 📑 Documentación complementaria
+
+<details>
+<summary>Vista rápida de la Matriz de Trazabilidad</summary>
+
+| Identificador | Indicadores | Prueba(s) – Descripción | Criterios de éxito | Corridas | Quién | Cuándo | Revisa |
+|---------------|------------|-------------------------|--------------------|----------|-------|--------|--------|
+| RF01 | Sensado ambiental mediante DHT11 | python test_dht11.py | Temp y Humedad >0 en consola | 3 | David Pérez | 2025-07-17 | Sí |
+| RF02 | Activación de relay de riego | Control GPIO17 vía RPi.GPIO | Encendido físico de relay / click audible | 3 | Julián Hidalgo | 2025-07-18 | Sí |
+| RF03 | Lógica de riego automática | Condicionales de temperatura, humedad y horario | Se valida en consola y relay responde | 3 | Julián Hidalgo | 2025-07-18 | Sí |
+| RF04 | Interfaz de configuración vía Web | API /api/configuracion + config.txt | Postman o navegador, archivo config.txt | 2 | David Pérez | 2025-07-22 | Sí |
+| RF05 | Visualización de estado en tiempo real | Endpoint /api/status con JSON | Navegador, Postman | 2 | David Pérez | 2025-07-22 | Sí |
+| RF06 | Activación manual de riego desde navegador | Endpoint /api/riego con POST estado=ON/OFF | Verifica desde navegador / curl / Postman | 3 | Julián Hidalgo | 2025-07-22 | Sí |
+| RF07 | Arranque automático al encender la Raspberry Pi | Servicio systemd greendrop.service | systemctl status, prueba de reinicio | 1 | Julián Hidalgo | 2025-07-23 | Sí |
+| RF08 | Documentación detallada y técnica | README.md, diagramas, estructura, scripts | Archivo README completo | 1 | David Pérez | 2025-07-23 | Sí |
+| RF09 | Licencia abierta y créditos claros | LICENSE (MIT) + sección de créditos en README | Visibles en repo y PDF | 1 | Julián Hidalgo | 2025-07-23 | Sí |
+| RF10 | Uso “plug and play” desde navegador | RPi ejecuta webserver automáticamente | Se verifica en red local IP:5000 | 1 | Julián Hidalgo | 2025-07-23 | Sí |
+
+</details>
+
+**Descargas completas**  
+- [Matriz por fases (Excel)](docs/Matriz_Trazabilidad_GreenDrop_Phases.xlsx)  
+- [Matriz global (CSV)](docs/Matriz_Trazabilidad_GreenDrop_All.csv)  
+- [Presentación final (PDF)](docs/Presentacion_GreenDrop.pdf)
+
+---
+
 ## ⚖️ Licencia y Créditos
 
 Este proyecto ha sido desarrollado con fines académicos en el marco de la Universidad Nacional de Colombia, y está licenciado bajo la MIT License. Consulta el archivo [LICENSE](LICENSE) para más detalles.
