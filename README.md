@@ -1,9 +1,9 @@
 # 🌱 GreenDrop: Sistema inteligente de riego automatizado
 
 📚 Proyecto académico  
-Universidad Nacional de Colombia – Sede Manizales  
+**Universidad Nacional de Colombia – Sede Manizales**  
 Facultad de Ingeniería y Arquitectura  
-Asignatura: Programación en Sistemas Linux Embebidos  
+Asignatura: **Programación en Sistemas Linux Embebidos**  
 Periodo: 2025-1
 
 ---
