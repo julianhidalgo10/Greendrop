@@ -2,261 +2,358 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>🌿 GreenDrop - Control de Riego</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GreenDrop - Control de Riego</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0; padding: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #0b3d0b, #1f5a1f);
-      color: #e0f2e9;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px 15px;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0b2e13;
+      color: #ecf0f1;
+      padding: 30px;
+      margin: 0;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      color: #2ecc71;
     }
     .container {
-      background: rgba(15, 53, 15, 0.9);
-      border-radius: 15px;
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+    }
+    .card {
+      background-color: #1c3b2f;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       max-width: 480px;
       width: 100%;
-      padding: 30px 30px 40px;
-      box-shadow: 0 8px 20px rgba(0, 100, 0, 0.7);
+      margin-bottom: 32px;
     }
-    .logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 25px;
-    }
-    .logo svg {
-      width: 48px;
-      height: 48px;
-      fill: #a3d977;
-      filter: drop-shadow(0 0 4px #8cc06f);
-    }
-    .logo h1 {
-      font-weight: 600;
-      font-size: 2.4rem;
-      color: #a3d977;
-      margin: 0;
-      text-shadow: 0 0 5px #729e3c;
+    .card p, .card label {
+      font-size: 1.1em;
+      margin: 9px 0;
     }
     .status {
-      margin-bottom: 30px;
-    }
-    .status p {
-      font-size: 1.15rem;
-      margin: 12px 0;
-      font-weight: 500;
-    }
-    .status span {
-      font-weight: 700;
-      color: #d3f4bc;
+      color: #2ecc71;
+      font-weight: bold;
     }
     label {
       display: block;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #b2d498;
+      margin-top: 18px;
+      margin-bottom: 5px;
     }
-    input[type="number"],
-    input[type="time"] {
+    input[type="number"], input[type="text"], input[type="time"] {
       width: 100%;
-      padding: 10px 14px;
-      border-radius: 8px;
+      padding: 10px;
       border: none;
-      font-size: 1.1rem;
-      margin-bottom: 18px;
-      background: #3c6e3c;
-      color: #e0f2e9;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
-      transition: background-color 0.3s ease;
-    }
-    input[type="number"]:focus,
-    input[type="time"]:focus {
-      background-color: #529352;
-      outline: none;
+      border-radius: 6px;
+      background-color: #2f4f3a;
+      color: #fff;
+      font-size: 1em;
     }
     button {
-      background-color: #86b974;
-      color: #0b2a0b;
+      margin-top: 12px;
+      padding: 12px;
+      font-size: 1em;
+      font-weight: bold;
       border: none;
-      font-weight: 700;
-      font-size: 1.1rem;
-      padding: 12px 0;
-      border-radius: 10px;
+      border-radius: 6px;
       cursor: pointer;
       width: 100%;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 8px #6a9755;
-      transition: background-color 0.25s ease, box-shadow 0.25s ease;
+      transition: background 0.3s ease;
     }
     button:hover {
-      background-color: #a3d977;
-      box-shadow: 0 6px 12px #8cc06f;
+      opacity: 0.9;
     }
-    hr {
-      border: none;
-      border-top: 1px solid #4c7b4c;
-      margin: 32px 0;
+    .btn-umbral { background-color: #27ae60; color: #fff; }
+    .btn-activar { background-color: #1abc9c; color: #fff; }
+    .btn-desactivar { background-color: #e74c3c; color: #fff; }
+    .btn-agregar { background-color: #3aa755; color: #fff; margin-top: 8px; }
+    .btn-eliminar { background-color: #a61c1c; color: #fff; padding: 4px 10px; font-size: 0.93em; margin-left: 8px; width: auto;}
+    .section-title { font-size: 1.3em; margin: 18px 0 8px 0; color: #87f0a8; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #183025;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 0.97em;
     }
-    #mensajeProgramacion {
+    th, td {
+      padding: 6px 7px;
+      border-bottom: 1px solid #26543a;
       text-align: center;
-      font-weight: 700;
-      font-size: 1rem;
-      color: #b7e4a3;
-      min-height: 1.4em;
-      margin-top: 8px;
     }
-    @media (max-width: 520px) {
-      .container {
-        padding: 25px 20px 30px;
-      }
+    th {
+      background: #225c36;
+      color: #b7ffd7;
+    }
+    tr:last-child td { border-bottom: none; }
+    .no-log { color: #aaa; text-align: center; padding: 12px 0;}
+    .horario-lista {
+      margin: 10px 0;
+      list-style: none;
+      padding: 0;
+      color: #b7ffd7;
+    }
+    .horario-lista li {
+      margin-bottom: 6px;
+      font-size: 1em;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 32px;
+      color: #7f8c8d;
+      font-size: 0.93em;
     }
   </style>
 </head>
 <body>
+  <div id="notificaciones"></div>
+  <h1>🌿 GreenDrop</h1>
+  <p style="text-align:center;font-size:1.3em;">
+    <span id="hora-actual"></span>
+  </p>
   <div class="container">
-    <div class="logo" aria-label="Logo GreenDrop">
-      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-        <path d="M32 2C18 14 14 27 14 38a18 18 0 0 0 36 0c0-11-4-24-18-36z"/>
-      </svg>
-      <h1>GreenDrop</h1>
+    <div class="card">
+      <p><strong>🌡️ Temperatura ambiente:</strong> <span id="temperatura" class="status">--</span>°C</p>
+      <p><strong>🌡️ Temp. Raspberry Pi:</strong> <span id="temp_pi" class="status">--</span>°C</p>
+      <p><strong>💧 Humedad ambiente:</strong> <span id="humedad" class="status">--</span>%</p>
+      <p><strong>📉 Umbral configurado:</strong> <span id="umbral" class="status">--</span>%</p>
+      <p><strong>💧 Estado del riego:</strong> <span id="estado" class="status">--</span></p>
+      <label for="nuevoUmbral">🔧 Cambiar umbral (%):</label>
+      <input type="number" id="nuevoUmbral" min="0" max="100" />
+      <button class="btn-umbral" onclick="actualizarUmbral()">Actualizar Umbral</button>
+      <button class="btn-activar" onclick="activarRiego()">💧 Activar Riego</button>
+      <button class="btn-desactivar" onclick="desactivarRiego()">🛑 Desactivar Riego</button>
     </div>
+  </div>
 
-    <section class="status" aria-live="polite" aria-atomic="true">
-      <p><strong>Humedad actual:</strong> <span id="humedad">--</span>%</p>
-      <p><strong>Umbral configurado:</strong> <span id="umbral">--</span></p>
-      <p><strong>Estado del riego:</strong> <span id="estado">--</span></p>
-    </section>
+  <div class="container">
+    <div class="card">
+      <div class="section-title">⏰ Programación de Horarios de Riego</div>
+      <ul id="horario-lista" class="horario-lista"></ul>
+      <div style="display: flex; gap:8px;">
+        <input type="time" id="nuevoHorario" style="flex:1;" />
+        <input type="number" id="nuevaDuracion" min="1" max="120" value="5" style="width:70px;" placeholder="min" />
+        <button class="btn-agregar" onclick="agregarHorario()" style="flex:1;">Agregar horario</button>
+      </div>
+    </div>
+  </div>
 
-    <section aria-label="Control de umbral y riego manual">
-      <label for="nuevoUmbral">Cambiar umbral</label>
-      <input
-        type="number"
-        id="nuevoUmbral"
-        min="0"
-        max="100"
-        onchange="actualizarUmbral()"
-      />
-      <button type="button" onclick="actualizarUmbral()">Actualizar Umbral</button>
+  <div class="container">
+    <div class="card">
+      <div class="section-title">📝 Historial de Riego</div>
+      <button class="btn-desactivar" style="width:auto; margin-bottom:7px;" onclick="borrarRegistros()">🗑️ Limpiar historial</button>
+      <div id="no-log" class="no-log">Cargando registros...</div>
+      <table id="tabla-registros" style="display:none;">
+        <thead>
+          <tr>
+            <th>Fecha/Hora</th>
+            <th>Evento</th>
+            <th>Temp (°C)</th>
+            <th>Humedad (%)</th>
+          </tr>
+        </thead>
+        <tbody id="registros-tbody"></tbody>
+      </table>
+    </div>
+  </div>
 
-      <button type="button" onclick="activarRiego()">💧 Activar Riego</button>
-      <button type="button" onclick="desactivarRiego()">🛑 Desactivar Riego</button>
-    </section>
-
-    <hr />
-
-    <section aria-label="Programación automática de riego">
-      <h2 style="color:#9fcb8a; margin-bottom: 15px;">Riego Automático Programado</h2>
-
-      <label for="horaProgramada">Hora (HH:MM)</label>
-      <input
-        type="time"
-        id="horaProgramada"
-        onchange="guardarProgramacion()"
-      />
-
-      <label for="duracionRiego">Duración (segundos)</label>
-      <input
-        type="number"
-        id="duracionRiego"
-        min="1"
-        max="3600"
-        onchange="guardarProgramacion()"
-      />
-
-      <button type="button" onclick="guardarProgramacion()">Guardar Programación</button>
-      <p id="mensajeProgramacion" role="alert" aria-live="assertive"></p>
-    </section>
+  <div class="footer">
+    GreenDrop © 2025 — Sistema de Riego Inteligente
   </div>
 
   <script>
+    function notificar(msg, ok=true) {
+      const div = document.getElementById("notificaciones");
+      div.innerHTML = `<div style="
+        margin:14px auto;
+        max-width:420px;
+        background:${ok?'#008d37':'#a61c1c'};color:white;
+        padding:12px;border-radius:9px;text-align:center;font-weight:bold;">
+        ${msg}
+        </div>`;
+      setTimeout(() => { div.innerHTML = ""; }, 3600);
+    }
+
+    function actualizarHora() {
+      const ahora = new Date();
+      let texto = ahora.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      document.getElementById('hora-actual').innerText = "🕒 Hora actual: " + texto;
+    }
+    setInterval(actualizarHora, 1000);
+    actualizarHora();
+
     async function cargarDatos() {
       try {
         const res = await fetch("/api/status");
         const data = await res.json();
-        document.getElementById("humedad").innerText = data.humedad || "--";
-        document.getElementById("umbral").innerText = data.umbral || "--";
-        document.getElementById("estado").innerText = data.estado_riego || "OFF";
+        document.getElementById("temperatura").innerText = (data.temperatura !== null && data.temperatura !== undefined) ? data.temperatura : "--";
+        document.getElementById("temp_pi").innerText = data.temp_raspberry !== undefined && data.temp_raspberry !== null ? data.temp_raspberry : "--";
+        document.getElementById("humedad").innerText = (data.humedad !== null && data.humedad !== undefined) ? data.humedad : "--";
+        document.getElementById("umbral").innerText = data.umbral !== undefined ? data.umbral : "--";
+        document.getElementById("estado").innerText = data.relay !== undefined ? data.relay : "--";
       } catch (e) {
         console.error("Error al cargar datos:", e);
       }
     }
 
     async function actualizarUmbral() {
-      const valor = parseInt(document.getElementById("nuevoUmbral").value);
+      const valor = parseFloat(document.getElementById("nuevoUmbral").value);
       if (isNaN(valor) || valor < 0 || valor > 100) {
-        alert("Ingrese un valor válido entre 0 y 100.");
+        notificar("Ingrese un valor válido entre 0 y 100.", false);
         return;
       }
-      try {
-        await fetch("/api/configuracion", {
-          method: "POST",
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ umbral: valor })
-        });
-        document.getElementById("umbral").innerText = valor;
-      } catch (e) {
-        console.error("Error actualizando umbral:", e);
-      }
+      const res = await fetch("/api/umbral", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ umbral: valor })
+      });
+      const data = await res.json();
+      notificar(data.mensaje || "Umbral actualizado.", data.ok);
+      cargarDatos();
     }
 
     async function activarRiego() {
-      await fetch("/api/riego", {
+      const res = await fetch("/api/riego", {
         method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ estado: "ON" })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accion: "ON" })
       });
+      const data = await res.json();
+      notificar(data.mensaje || "Riego activado.", data.ok);
       cargarDatos();
     }
 
     async function desactivarRiego() {
-      await fetch("/api/riego", {
+      const res = await fetch("/api/riego", {
         method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ estado: "OFF" })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accion: "OFF" })
       });
+      const data = await res.json();
+      notificar(data.mensaje || "Riego desactivado.", data.ok);
       cargarDatos();
     }
 
-    async function guardarProgramacion() {
-      const hora = document.getElementById("horaProgramada").value;
-      const duracion = parseInt(document.getElementById("duracionRiego").value);
-
-      if (!hora || !duracion || duracion <= 0) {
-        return;
-      }
-
+    async function cargarRegistros() {
       try {
-        const res = await fetch("/api/configuracion", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ hora: hora, duracion: duracion })
-        });
-
-        if (res.ok) {
-          document.getElementById("mensajeProgramacion").innerText = "Programación actualizada correctamente.";
-          setTimeout(() => { document.getElementById("mensajeProgramacion").innerText = ""; }, 4000);
+        const res = await fetch("/api/registros");
+        const data = await res.json();
+        const registros = data.registros || [];
+        const tbody = document.getElementById("registros-tbody");
+        tbody.innerHTML = "";
+        if (registros.length === 0) {
+          document.getElementById("tabla-registros").style.display = "none";
+          document.getElementById("no-log").style.display = "";
+          document.getElementById("no-log").innerText = "No hay registros de riego.";
         } else {
-          const error = await res.json();
-          alert("Error: " + (error.error || "No se pudo actualizar"));
+          document.getElementById("tabla-registros").style.display = "";
+          document.getElementById("no-log").style.display = "none";
+          registros.slice(-50).reverse().forEach(reg => {
+            const tr = document.createElement("tr");
+            reg.forEach((d, i) => {
+              const td = document.createElement("td");
+              if (i === 1) td.innerHTML = d === "ON" ? "Activado" : "Desactivado";
+              else td.innerText = d;
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
         }
       } catch (e) {
-        console.error("Error actualizando programación:", e);
+        document.getElementById("tabla-registros").style.display = "none";
+        document.getElementById("no-log").style.display = "";
+        document.getElementById("no-log").innerText = "No se pudo cargar el historial.";
       }
     }
 
-    setInterval(cargarDatos, 10000);
+    async function borrarRegistros() {
+      if (confirm("¿Seguro que quieres eliminar todo el historial?")) {
+        const res = await fetch("/api/registros", { method: "DELETE" });
+        const data = await res.json();
+        notificar(data.mensaje || "Historial eliminado.", data.ok);
+        cargarRegistros();
+      }
+    }
+
+    async function cargarHorarios() {
+      const ul = document.getElementById("horario-lista");
+      ul.innerHTML = "";
+      try {
+        const res = await fetch("/api/horarios");
+        const data = await res.json();
+        const horarios = data.horarios || [];
+        if (horarios.length === 0) {
+          ul.innerHTML = "<li style='color:#aaa'>No hay horarios programados.</li>";
+        } else {
+          horarios.forEach((h, idx) => {
+            const li = document.createElement("li");
+            li.innerText = h.hora + " (" + h.duracion + " min)";
+            const btn = document.createElement("button");
+            btn.innerText = "Eliminar";
+            btn.className = "btn-eliminar";
+            btn.onclick = () => eliminarHorario(idx);
+            li.appendChild(btn);
+            ul.appendChild(li);
+          });
+        }
+      } catch {
+        ul.innerHTML = "<li style='color:#aaa'>Error al cargar horarios.</li>";
+      }
+    }
+
+    async function agregarHorario() {
+      const hora = document.getElementById("nuevoHorario").value;
+      const duracion = parseInt(document.getElementById("nuevaDuracion").value);
+      if (!/^\d{2}:\d{2}$/.test(hora) || isNaN(duracion) || duracion < 1 || duracion > 120) {
+        notificar("Ingrese una hora válida (HH:MM) y duración (1-120 minutos).", false);
+        return;
+      }
+      const res = await fetch("/api/horarios");
+      const data = await res.json();
+      const horarios = data.horarios || [];
+      if (horarios.some(h => h.hora === hora)) {
+        notificar("Ese horario ya está agregado.", false);
+        return;
+      }
+      horarios.push({ hora, duracion });
+      await fetch("/api/horarios", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ horarios })
+      });
+      document.getElementById("nuevoHorario").value = "";
+      document.getElementById("nuevaDuracion").value = "5";
+      notificar("Horario agregado.", true);
+      cargarHorarios();
+    }
+
+    async function eliminarHorario(idx) {
+      const res = await fetch("/api/horarios");
+      const data = await res.json();
+      const horarios = data.horarios || [];
+      horarios.splice(idx, 1);
+      await fetch("/api/horarios", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ horarios })
+      });
+      notificar("Horario eliminado.", true);
+      cargarHorarios();
+    }
+
+    setInterval(() => {
+      cargarDatos();
+      cargarRegistros();
+      cargarHorarios();
+    }, 8000);
     cargarDatos();
+    cargarRegistros();
+    cargarHorarios();
   </script>
 </body>
 </html>
