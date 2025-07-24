@@ -32,7 +32,7 @@ Este proyecto fue desarrollado bajo Linux embebido y sigue las buenas prácticas
 
 Representación general del sistema:
 
-![Diagrama de Bloques](img/diagrama_bloques.png)
+![Diagrama de Bloques](img/diagrama_de_bloques.png)
 
 ---
 
