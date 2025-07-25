@@ -63,20 +63,24 @@ Describe el flujo de funcionamiento lógico del sistema:
 
 ```
 Greendrop/
-├── config/                              # Configuración del sistema
+├── config/                                             # Configuración del sistema
 │ └── config.txt
-├── data/                                # Logs y CSV (se generan en runtime)
-├── img/                                 # Diagramas PNG
+├── data/                                               # Logs y CSV (se generan en runtime)
+├── docs/
+│   ├── Matriz_Trazabilidad_GreenDrop_Phases.xlsx       # Matriz de Trazabilidad por Fases
+│   ├── Matriz_Trazabilidad_GreenDrop_All.csv           # Matriz de Trazabilidad Global
+│   └── Presentacion_GreenDrop.pdf                      # Presentación del Proyecto
+├── img/                                                # Diagramas PNG
 │ ├── Diagrama_bloques.png
 │ ├── arquitectura_estructural.png
 │ └── arquitectura_funcional.png
-├── scripts/                             # Scripts de utilidad (servicios)
-├── src/                                 # Código fuente principal
+├── scripts/                                            # Scripts de utilidad (servicios)
+├── src/                                                # Código fuente principal
 │ └── webserver.py
-├── requirements.txt                     # Dependencias del sistema
-├── LICENSE                              # Licencia MIT 
-├── Makefile                             # Automatización de tareas
-└── README.md                            # Este documento
+├── requirements.txt                                    # Dependencias del sistema
+├── LICENSE                                             # Licencia MIT 
+├── Makefile                                            # Automatización de tareas
+└── README.md                                           # Este documento
 ```
 
 ---
@@ -268,7 +272,7 @@ GreenDrop es una solución embebida funcional, extensible y educativa. Permite i
 **Descargas completas**  
 - [Matriz por fases (Excel)](docs/Matriz_Trazabilidad_GreenDrop_Phases.xlsx)  
 - [Matriz global (CSV)](docs/Matriz_Trazabilidad_GreenDrop_All.csv)  
-- [Presentación final (PDF)](docs/Presentacion_GreenDrop.pdf)
+- [Presentación (PDF)](docs/Presentacion_GreenDrop.pdf)
 
 ---
 
